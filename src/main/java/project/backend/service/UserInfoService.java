@@ -27,6 +27,7 @@ import project.backend.repository.DetailInfoRepository;
 @Slf4j
 @Transactional
 public class UserInfoService {
+	
 	private final BasicInfoRepository basicInfoRepository;
 	private final DetailInfoRepository detailInfoRepository;
 	

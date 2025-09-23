@@ -16,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class DetailInfoDTO {
+	
 	private Long id;
 	private Long basicInfoId;
 	

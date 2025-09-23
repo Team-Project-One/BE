@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class UserInfoResponseDTO {
+	
 	private Long basicInfoId;
 	private String name;
 	private String gender;

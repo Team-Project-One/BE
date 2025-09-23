@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import project.backend.entity.BasicInfo;
 
 @Repository
-public interface BasicInfoRepository extends JpaRepository<BasicInfo, Long>{
+public interface BasicInfoRepository extends JpaRepository<BasicInfo, Long> {
 	Optional<BasicInfo> findByName(String name);
 }

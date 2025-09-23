@@ -25,6 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class BasicInfo {
+	
 	@Id // 기본키 필드
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
