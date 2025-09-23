@@ -47,7 +47,8 @@ public class UserInfoController {
 			@RequestParam(value = "pet", required  = false) String pet,
 			@RequestParam(value = "religion", required = false) String religion,
 			@RequestParam(value = "childPlan", required = false) String childPlan,
-			@RequestParam(value = "mbti", required = false) String mbti) {	
+			@RequestParam(value = "mbti", required = false) String mbti) {
+		
 		log.info("상세 정보 저장 요청 - 기본정보 ID: {}", basicInfoId);
 		
 		DetailInfoDTO detailInfoDTO = DetailInfoDTO.builder()
@@ -71,6 +72,7 @@ public class UserInfoController {
 		}
 	}
 	
+	// 테스트용 API
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserInfoResponseDTO> getUserInfo(@PathVariable("userId") Long userId) {
 	    log.info("사용자 정보 조회 요청 - 사용자 ID: {}", userId);
