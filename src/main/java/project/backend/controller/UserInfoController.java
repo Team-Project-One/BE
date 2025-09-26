@@ -1,5 +1,7 @@
 package project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,7 @@ public class UserInfoController {
 	public ResponseEntity<DetailInfoDTO> saveDetailInfo(
 			@RequestParam("basicInfoId") Long basicInfoId,
 			@RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+			@RequestParam(value = "place", required = false) String place,
 			@RequestParam(value = "drinkingFrequency", required = false) String drinkingFrequency,
 			@RequestParam(value = "smokingStatus", required = false) String smokingStatus,
 			@RequestParam(value = "height", required = false) Integer height,
@@ -54,6 +57,7 @@ public class UserInfoController {
 		DetailInfoDTO detailInfoDTO = DetailInfoDTO.builder()
 				.basicInfoId(basicInfoId)
 				.profileImage(profileImage)
+				.place(place)
 				.drinkingFrequency(drinkingFrequency)
 				.smokingStatus(smokingStatus)
 				.height(height)
@@ -78,5 +82,11 @@ public class UserInfoController {
 	    log.info("사용자 정보 조회 요청 - 사용자 ID: {}", userId);
 	    UserInfoResponseDTO userInfo = userInfoService.getUserInfo(userId);
 	    return ResponseEntity.ok(userInfo);
+	}
+	
+	@GetMapping("/same-place")
+	public ResponseEntity<List<UserInfoResponseDTO>> getUsersBySamePlace(@RequestParam("basicInfoId") Long basicInfoId) {
+		List<UserInfoResponseDTO> users = userInfoService.getUsersBySamePlace(basicInfoId);
+		return ResponseEntity.ok(users);
 	}
 }

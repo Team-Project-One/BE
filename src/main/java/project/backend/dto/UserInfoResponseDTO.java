@@ -14,13 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class UserInfoResponseDTO {
-	
 	private Long basicInfoId;
 	private String name;
 	private String gender;
 	private LocalDate birthDate;
 	private Long detailInfoId;
 	private String profileImagePath;
+	private String place;
 	private String drinkingFrequency;
 	private String smokingStatus;
 	private Integer height;

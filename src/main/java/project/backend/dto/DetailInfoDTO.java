@@ -16,7 +16,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class DetailInfoDTO {
-	
 	private Long id;
 	private Long basicInfoId;
 	
@@ -24,6 +23,7 @@ public class DetailInfoDTO {
 	private MultipartFile profileImage;
 	
 	private String profileImagePath;
+	private String place;
 	private String drinkingFrequency;
 	private String smokingStatus;
 	private Integer height;

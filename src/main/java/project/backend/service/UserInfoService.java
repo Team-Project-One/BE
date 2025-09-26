@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,6 @@ import project.backend.repository.DetailInfoRepository;
 @Slf4j
 @Transactional
 public class UserInfoService {
-	
 	private final BasicInfoRepository basicInfoRepository;
 	private final DetailInfoRepository detailInfoRepository;
 	
@@ -67,6 +67,7 @@ public class UserInfoService {
 		DetailInfo detailInfo = DetailInfo.builder()
 				.basicInfo(basicInfo)
 				.profileImagePath(profileImagePath)
+				.place(detailInfoDTO.getPlace())
 				.drinkingFrequency(detailInfoDTO.getDrinkingFrequency())
 				.smokingStatus(detailInfoDTO.getSmokingStatus())
 				.height(detailInfoDTO.getHeight())
@@ -82,6 +83,7 @@ public class UserInfoService {
 				.id(savedDetailInfo.getId())
 				.basicInfoId(savedDetailInfo.getBasicInfo().getId())
 				.profileImagePath(savedDetailInfo.getProfileImagePath())
+				.place(savedDetailInfo.getPlace())
 				.drinkingFrequency(savedDetailInfo.getDrinkingFrequency())
 				.smokingStatus(savedDetailInfo.getSmokingStatus())
 				.height(savedDetailInfo.getHeight())
@@ -110,6 +112,7 @@ public class UserInfoService {
 		if (detailInfo != null) {
 			builder.detailInfoId(basicInfo.getId())
 				.profileImagePath(detailInfo.getProfileImagePath())
+				.place(detailInfo.getPlace())
 				.drinkingFrequency(detailInfo.getDrinkingFrequency())
 				.smokingStatus(detailInfo.getSmokingStatus())
 				.height(detailInfo.getHeight())
@@ -156,6 +159,7 @@ public class UserInfoService {
 			detailInfo.setProfileImagePath(newProfileImagePath);
 		}
 		
+		detailInfo.setPlace(detailInfoDTO.getPlace());
 		detailInfo.setDrinkingFrequency(detailInfoDTO.getDrinkingFrequency());
 		detailInfo.setSmokingStatus(detailInfoDTO.getSmokingStatus());
 		detailInfo.setHeight(detailInfoDTO.getHeight());
@@ -168,6 +172,7 @@ public class UserInfoService {
 		
 		return DetailInfoDTO.builder()
 				.id(updatedDetailInfo.getId())
+				.place(updatedDetailInfo.getPlace())
 				.drinkingFrequency(updatedDetailInfo.getDrinkingFrequency())
 				.smokingStatus(updatedDetailInfo.getSmokingStatus())
 				.height(updatedDetailInfo.getHeight())
@@ -176,6 +181,43 @@ public class UserInfoService {
 				.childPlan(updatedDetailInfo.getChildPlan())
 				.mbti(updatedDetailInfo.getMbti())
 				.build();
+	}
+	
+	// 현재 사용자의 거주 지역을 기준으로 같은 지역 사용자 찾기
+	@Transactional(readOnly = true)
+	public List<UserInfoResponseDTO> getUsersBySamePlace(Long myBasicInfoId) {
+		// 내 상세정보 가져오기
+		DetailInfo myDetail = detailInfoRepository.findByBasicInfoId(myBasicInfoId)
+				.orElseThrow(() -> new IllegalArgumentException("상세정보를 찾을 수 없습니다."));
+			 
+		String myPlace = myDetail.getPlace();
+			 
+		// 같은 지역 사용자 전체 조회
+		List<DetailInfo> usersInSamePlace = detailInfoRepository.findByPlace(myPlace);
+			 
+		return usersInSamePlace.stream()
+			.filter(detail -> !detail.getBasicInfo().getId().equals(myBasicInfoId)) // 자신 제외
+			.map(detail -> {
+				BasicInfo basic = detail.getBasicInfo();
+						 
+				return UserInfoResponseDTO.builder()
+						.basicInfoId(basic.getId())
+						.name(basic.getName())
+						.gender(basic.getGender())
+						.birthDate(basic.getBirthDate())
+						.detailInfoId(detail.getId())
+						.profileImagePath(detail.getProfileImagePath())
+						.place(detail.getPlace())
+						.drinkingFrequency(detail.getDrinkingFrequency())
+						.smokingStatus(detail.getSmokingStatus())
+						.height(detail.getHeight())
+						.pet(detail.getPet())
+						.religion(detail.getReligion())
+						.childPlan(detail.getChildPlan())
+						.mbti(detail.getMbti())
+						.build();
+			})
+			.toList();
 	}
 	
 	// 회원 탈퇴 (MyPageService에서 위임 호출)

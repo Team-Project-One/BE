@@ -22,7 +22,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class DetailInfo {
-	
 	@Id // 기본키 필드
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -33,6 +32,9 @@ public class DetailInfo {
 	
 	@Column(name = "profile_image_path") // 상세 정보 - 프로필 사진
 	private String profileImagePath;
+	
+	@Column(name = "place") // 상세 정보 - 거주 지역
+	private String place; // 예: 서울특별시, 경기도 용인시
 	
 	@Column(name = "drinking_frequency") // 상세 정보 - 음주빈도
 	private String drinkingFrequency; // 안 마심, 가끔 마심, 적당히 마심, 자주 마심
