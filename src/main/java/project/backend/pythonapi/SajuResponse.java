@@ -2,7 +2,7 @@ package project.backend.pythonapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record MatchResponse(
+public record SajuResponse(
         @JsonProperty("original_score")
         double originalScore,
 

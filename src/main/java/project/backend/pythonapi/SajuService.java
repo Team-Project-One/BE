@@ -7,16 +7,16 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-public class MatchService {
+public class SajuService {
     private final WebClient webClient;
 
-    public Mono<MatchResponse> getMatchResult(MatchRequest request) {
+    public Mono<SajuResponse> getMatchResult(SajuRequest request) {
 
         return webClient.post()
                 .uri("/match")
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(MatchResponse.class);
+                .bodyToMono(SajuResponse.class);
 
     }
 }
