@@ -1,4 +1,4 @@
-package project.backend.entity;
+package project.backend.user.entity;
 
 import java.time.LocalDate;
 

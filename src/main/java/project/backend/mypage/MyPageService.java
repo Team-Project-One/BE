@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import project.backend.dto.UserInfoResponseDTO;
-import project.backend.entity.BasicInfo;
-import project.backend.entity.DetailInfo;
-import project.backend.repository.BasicInfoRepository;
-import project.backend.repository.DetailInfoRepository;
-import project.backend.service.UserInfoService;
+import project.backend.user.dto.UserInfoResponseDTO;
+import project.backend.user.entity.BasicInfo;
+import project.backend.user.entity.DetailInfo;
+import project.backend.user.repository.BasicInfoRepository;
+import project.backend.user.repository.DetailInfoRepository;
+import project.backend.user.UserInfoService;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package project.backend.controller;
+package project.backend.user;
 
 import java.util.List;
 
@@ -17,10 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import project.backend.dto.BasicInfoDTO;
-import project.backend.dto.DetailInfoDTO;
-import project.backend.dto.UserInfoResponseDTO;
-import project.backend.service.UserInfoService;
+import project.backend.user.dto.BasicInfoDTO;
+import project.backend.user.dto.DetailInfoDTO;
+import project.backend.user.dto.UserInfoResponseDTO;
 
 @RestController
 @RequestMapping("/api/user-info")

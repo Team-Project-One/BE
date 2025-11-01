@@ -1,4 +1,4 @@
-package project.backend.dto;
+package project.backend.user.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

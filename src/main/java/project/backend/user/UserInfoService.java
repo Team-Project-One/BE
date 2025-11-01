@@ -1,4 +1,4 @@
-package project.backend.service;
+package project.backend.user;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,13 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import project.backend.dto.BasicInfoDTO;
-import project.backend.dto.DetailInfoDTO;
-import project.backend.dto.UserInfoResponseDTO;
-import project.backend.entity.BasicInfo;
-import project.backend.entity.DetailInfo;
-import project.backend.repository.BasicInfoRepository;
-import project.backend.repository.DetailInfoRepository;
+import project.backend.user.dto.BasicInfoDTO;
+import project.backend.user.dto.DetailInfoDTO;
+import project.backend.user.dto.UserInfoResponseDTO;
+import project.backend.user.entity.BasicInfo;
+import project.backend.user.entity.DetailInfo;
+import project.backend.user.repository.BasicInfoRepository;
+import project.backend.user.repository.DetailInfoRepository;
 
 @Service
 @RequiredArgsConstructor

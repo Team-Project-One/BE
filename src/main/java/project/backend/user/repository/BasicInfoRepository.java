@@ -1,11 +1,11 @@
-package project.backend.repository;
+package project.backend.user.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import project.backend.entity.BasicInfo;
+import project.backend.user.entity.BasicInfo;
 
 @Repository
 public interface BasicInfoRepository extends JpaRepository<BasicInfo, Long> {

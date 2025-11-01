@@ -1,4 +1,4 @@
-package project.backend.repository;
+package project.backend.user.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import project.backend.entity.DetailInfo;
+import project.backend.user.entity.DetailInfo;
 
 @Repository
 public interface DetailInfoRepository extends JpaRepository<DetailInfo, Long> {
