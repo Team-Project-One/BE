@@ -14,49 +14,69 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import project.backend.user.dto.BasicInfoDTO;
-import project.backend.user.dto.DetailInfoDTO;
-import project.backend.user.dto.UserInfoResponseDTO;
-import project.backend.user.entity.BasicInfo;
-import project.backend.user.entity.DetailInfo;
-import project.backend.user.repository.BasicInfoRepository;
-import project.backend.user.repository.DetailInfoRepository;
+import project.backend.user.dto.SignUpRequestDTO;
+import project.backend.user.dto.UserResponseDTO;
+import project.backend.user.entity.User;
+import project.backend.user.entity.UserProfile;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-@Transactional
-public class UserInfoService {
+@Transactional(readOnly = true)
+public class UserService {
 
-	private final BasicInfoRepository basicInfoRepository;
-	private final DetailInfoRepository detailInfoRepository;
-	
+	private final UserRepository repository;
+
 	@Value("${file.upload-dir:uploads/profile}")
 	private String uploadDir;
-	
-	// 기본 정보 저장
+
+	@Transactional
+	public UserResponseDTO registerNewUser(SignUpRequestDTO requestDTO) {
+		UserProfile userProfile = UserProfile.builder()
+				.job(requestDTO.getJob())
+				.region(requestDTO.getRegion())
+				.drinkingFrequency(requestDTO.getDrinkingFrequency())
+				.smokingStatus(requestDTO.getSmokingStatus())
+				.height(requestDTO.getHeight())
+				.petPreference(requestDTO.getPetPreference())
+				.religion(requestDTO.getReligion())
+				.contactFrequency(requestDTO.getContactFrequency())
+				.mbti(requestDTO.getMbti())
+				.build();
+
+		User user = User.builder()
+				.name(requestDTO.getName())
+				.gender(requestDTO.getGender())
+				.birthDate(requestDTO.getBirthdate())
+				.userProfile(userProfile)
+				.build();
+
+		repository.save(user);
+
+		return UserResponseDTO.builder().id(user.getId()).name(user.getName()).build();
+	}
+
+	/*// 기본 정보 저장
 	public BasicInfoDTO saveBasicInfo(BasicInfoDTO basicInfoDTO) {
-		BasicInfo basicInfo = BasicInfo.builder()
+		User user = User.builder()
 				.name(basicInfoDTO.getName())
 				.gender(basicInfoDTO.getGender())
 				.birthDate(basicInfoDTO.getBirthDate())
 				.build();
 		
-		BasicInfo savedBasicInfo = basicInfoRepository.save(basicInfo);
+		User savedUser = repository.save(user);
 		
 		return BasicInfoDTO.builder()
-				.id(savedBasicInfo.getId())
-				.name(savedBasicInfo.getName())
-				.gender(savedBasicInfo.getGender())
-				.birthDate(savedBasicInfo.getBirthDate())
+				.id(savedUser.getId())
+				.name(savedUser.getName())
+				.gender(savedUser.getGender())
+				.birthDate(savedUser.getBirthDate())
 				.build();
 	}
 	
 	// 상세 정보 저장
 	public DetailInfoDTO saveDetailInfo(DetailInfoDTO detailInfoDTO) throws IOException {
 		// 기본 정보 조회
-		BasicInfo basicInfo = basicInfoRepository.findById(detailInfoDTO.getBasicInfoId())
+		User user = repository.findById(detailInfoDTO.getBasicInfoId())
 				.orElseThrow(() -> new EntityNotFoundException("기본 정보를 찾을 수 없습니다. ID: " + detailInfoDTO.getBasicInfoId()));
 		
 		// 프로필 이미지 처리
@@ -65,8 +85,8 @@ public class UserInfoService {
 			profileImagePath = saveProfileImage(detailInfoDTO.getProfileImage());
 		}
 		
-		DetailInfo detailInfo = DetailInfo.builder()
-				.basicInfo(basicInfo)
+		UserProfile userProfile = UserProfile.builder()
+				.user(user)
 				.profileImagePath(profileImagePath)
 				.place(detailInfoDTO.getPlace())
 				.drinkingFrequency(detailInfoDTO.getDrinkingFrequency())
@@ -78,49 +98,49 @@ public class UserInfoService {
 				.mbti(detailInfoDTO.getMbti())
 				.build();
 		
-		DetailInfo savedDetailInfo = detailInfoRepository.save(detailInfo);
+		UserProfile savedUserProfile = detailInfoRepository.save(userProfile);
 		
 		return DetailInfoDTO.builder()
-				.id(savedDetailInfo.getId())
-				.basicInfoId(savedDetailInfo.getBasicInfo().getId())
-				.profileImagePath(savedDetailInfo.getProfileImagePath())
-				.place(savedDetailInfo.getPlace())
-				.drinkingFrequency(savedDetailInfo.getDrinkingFrequency())
-				.smokingStatus(savedDetailInfo.getSmokingStatus())
-				.height(savedDetailInfo.getHeight())
-				.pet(savedDetailInfo.getPet())
-				.religion(savedDetailInfo.getReligion())
-				.childPlan(savedDetailInfo.getChildPlan())
-				.mbti(savedDetailInfo.getMbti())
+				.id(savedUserProfile.getId())
+				.basicInfoId(savedUserProfile.getUser().getId())
+				.profileImagePath(savedUserProfile.getProfileImagePath())
+				.place(savedUserProfile.getPlace())
+				.drinkingFrequency(savedUserProfile.getDrinkingFrequency())
+				.smokingStatus(savedUserProfile.getSmokingStatus())
+				.height(savedUserProfile.getHeight())
+				.pet(savedUserProfile.getPet())
+				.religion(savedUserProfile.getReligion())
+				.childPlan(savedUserProfile.getChildPlan())
+				.mbti(savedUserProfile.getMbti())
 				.build();
 	}
 	
 	// 전체 사용자 정보 조회
 	@Transactional(readOnly = true)
 	public UserInfoResponseDTO getUserInfo(Long basicInfoId) {
-		BasicInfo basicInfo = basicInfoRepository.findById(basicInfoId)
+		User user = repository.findById(basicInfoId)
 				.orElseThrow(() -> new EntityNotFoundException("기본 정보를 찾을 수 없습니다. ID: " + basicInfoId));
 		
-		DetailInfo detailInfo = detailInfoRepository.findByBasicInfoId(basicInfoId)
+		UserProfile userProfile = detailInfoRepository.findByBasicInfoId(basicInfoId)
 				.orElse(null);
 		
 		UserInfoResponseDTO.UserInfoResponseDTOBuilder builder = UserInfoResponseDTO.builder()
-				.basicInfoId(basicInfo.getId())
-				.name(basicInfo.getName())
-				.gender(basicInfo.getGender())
-				.birthDate(basicInfo.getBirthDate());
+				.basicInfoId(user.getId())
+				.name(user.getName())
+				.gender(user.getGender())
+				.birthDate(user.getBirthDate());
 		
-		if (detailInfo != null) {
-			builder.detailInfoId(basicInfo.getId())
-				.profileImagePath(detailInfo.getProfileImagePath())
-				.place(detailInfo.getPlace())
-				.drinkingFrequency(detailInfo.getDrinkingFrequency())
-				.smokingStatus(detailInfo.getSmokingStatus())
-				.height(detailInfo.getHeight())
-				.pet(detailInfo.getPet())
-				.religion(detailInfo.getReligion())
-				.childPlan(detailInfo.getChildPlan())
-				.mbti(detailInfo.getMbti());
+		if (userProfile != null) {
+			builder.detailInfoId(user.getId())
+				.profileImagePath(userProfile.getProfileImagePath())
+				.place(userProfile.getPlace())
+				.drinkingFrequency(userProfile.getDrinkingFrequency())
+				.smokingStatus(userProfile.getSmokingStatus())
+				.height(userProfile.getHeight())
+				.pet(userProfile.getPet())
+				.religion(userProfile.getReligion())
+				.childPlan(userProfile.getChildPlan())
+				.mbti(userProfile.getMbti());
 		}
 		
 		return builder.build();
@@ -128,59 +148,59 @@ public class UserInfoService {
 	
 	// 기본 정보 수정
 	public BasicInfoDTO updateBasicInfo(Long id, BasicInfoDTO basicInfoDTO) {
-		BasicInfo basicInfo = basicInfoRepository.findById(id)
+		User user = repository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("기본 정보를 찾을 수 없습니다. ID: " + id));
 		
-		basicInfo.setName(basicInfoDTO.getName());
-		basicInfo.setGender(basicInfoDTO.getGender());
-		basicInfo.setBirthDate(basicInfoDTO.getBirthDate());
+		user.setName(basicInfoDTO.getName());
+		user.setGender(basicInfoDTO.getGender());
+		user.setBirthDate(basicInfoDTO.getBirthDate());
 		
-		BasicInfo updatedBasicInfo = basicInfoRepository.save(basicInfo);
+		User updatedUser = repository.save(user);
 		
 		return BasicInfoDTO.builder()
-				.id(updatedBasicInfo.getId())
-				.name(updatedBasicInfo.getName())
-				.gender(updatedBasicInfo.getGender())
-				.birthDate(updatedBasicInfo.getBirthDate())
+				.id(updatedUser.getId())
+				.name(updatedUser.getName())
+				.gender(updatedUser.getGender())
+				.birthDate(updatedUser.getBirthDate())
 				.build();
 	}
 	
 	// 상세 정보 수정
 	public DetailInfoDTO updateDetailInfo(Long id, DetailInfoDTO detailInfoDTO) throws IOException {
-		DetailInfo detailInfo = detailInfoRepository.findById(id)
+		UserProfile userProfile = detailInfoRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("상세 정보를 찾을 수 없습니다. ID: " + id));
 		
 		// 새로운 프로필 이미지가 있으면 처리
 		if (detailInfoDTO.getProfileImage() != null && !detailInfoDTO.getProfileImage().isEmpty()) {
 			// 기존 이미지 삭제(선택사항)
-			if (detailInfo.getProfileImagePath() != null) {
-				deleteProfileImage(detailInfo.getProfileImagePath());
+			if (userProfile.getProfileImagePath() != null) {
+				deleteProfileImage(userProfile.getProfileImagePath());
 			}
 			String newProfileImagePath = saveProfileImage(detailInfoDTO.getProfileImage());
-			detailInfo.setProfileImagePath(newProfileImagePath);
+			userProfile.setProfileImagePath(newProfileImagePath);
 		}
 		
-		detailInfo.setPlace(detailInfoDTO.getPlace());
-		detailInfo.setDrinkingFrequency(detailInfoDTO.getDrinkingFrequency());
-		detailInfo.setSmokingStatus(detailInfoDTO.getSmokingStatus());
-		detailInfo.setHeight(detailInfoDTO.getHeight());
-		detailInfo.setPet(detailInfoDTO.getPet());
-		detailInfo.setReligion(detailInfoDTO.getReligion());
-		detailInfo.setChildPlan(detailInfoDTO.getChildPlan());
-		detailInfo.setMbti(detailInfoDTO.getMbti());
+		userProfile.setPlace(detailInfoDTO.getPlace());
+		userProfile.setDrinkingFrequency(detailInfoDTO.getDrinkingFrequency());
+		userProfile.setSmokingStatus(detailInfoDTO.getSmokingStatus());
+		userProfile.setHeight(detailInfoDTO.getHeight());
+		userProfile.setPet(detailInfoDTO.getPet());
+		userProfile.setReligion(detailInfoDTO.getReligion());
+		userProfile.setChildPlan(detailInfoDTO.getChildPlan());
+		userProfile.setMbti(detailInfoDTO.getMbti());
 		
-		DetailInfo updatedDetailInfo = detailInfoRepository.save(detailInfo);
+		UserProfile updatedUserProfile = detailInfoRepository.save(userProfile);
 		
 		return DetailInfoDTO.builder()
-				.id(updatedDetailInfo.getId())
-				.place(updatedDetailInfo.getPlace())
-				.drinkingFrequency(updatedDetailInfo.getDrinkingFrequency())
-				.smokingStatus(updatedDetailInfo.getSmokingStatus())
-				.height(updatedDetailInfo.getHeight())
-				.pet(updatedDetailInfo.getPet())
-				.religion(updatedDetailInfo.getReligion())
-				.childPlan(updatedDetailInfo.getChildPlan())
-				.mbti(updatedDetailInfo.getMbti())
+				.id(updatedUserProfile.getId())
+				.place(updatedUserProfile.getPlace())
+				.drinkingFrequency(updatedUserProfile.getDrinkingFrequency())
+				.smokingStatus(updatedUserProfile.getSmokingStatus())
+				.height(updatedUserProfile.getHeight())
+				.pet(updatedUserProfile.getPet())
+				.religion(updatedUserProfile.getReligion())
+				.childPlan(updatedUserProfile.getChildPlan())
+				.mbti(updatedUserProfile.getMbti())
 				.build();
 	}
 	
@@ -188,18 +208,18 @@ public class UserInfoService {
 	@Transactional(readOnly = true)
 	public List<UserInfoResponseDTO> getUsersBySamePlace(Long myBasicInfoId) {
 		// 내 상세정보 가져오기
-		DetailInfo myDetail = detailInfoRepository.findByBasicInfoId(myBasicInfoId)
+		UserProfile myDetail = detailInfoRepository.findByBasicInfoId(myBasicInfoId)
 				.orElseThrow(() -> new IllegalArgumentException("상세정보를 찾을 수 없습니다."));
 			 
 		String myPlace = myDetail.getPlace();
 			 
 		// 같은 지역 사용자 전체 조회
-		List<DetailInfo> usersInSamePlace = detailInfoRepository.findByPlace(myPlace);
+		List<UserProfile> usersInSamePlace = detailInfoRepository.findByPlace(myPlace);
 			 
 		return usersInSamePlace.stream()
-			.filter(detail -> !detail.getBasicInfo().getId().equals(myBasicInfoId)) // 자신 제외
+			.filter(detail -> !detail.getUser().getId().equals(myBasicInfoId)) // 자신 제외
 			.map(detail -> {
-				BasicInfo basic = detail.getBasicInfo();
+				User basic = detail.getUser();
 						 
 				return UserInfoResponseDTO.builder()
 						.basicInfoId(basic.getId())
@@ -223,17 +243,17 @@ public class UserInfoService {
 	
 	// 회원 탈퇴 (MyPageService에서 위임 호출)
 	public void deleteUser(Long userId) {
-		BasicInfo basicInfo = basicInfoRepository.findById(userId)
+		User user = repository.findById(userId)
 				.orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId));
 		
 		// 프로필 이미지 삭제
-		DetailInfo detailInfo = detailInfoRepository.findByBasicInfoId(userId).orElse(null);
-		if (detailInfo != null && detailInfo.getProfileImagePath() != null) {
-			deleteProfileImage(detailInfo.getProfileImagePath());
+		UserProfile userProfile = detailInfoRepository.findByBasicInfoId(userId).orElse(null);
+		if (userProfile != null && userProfile.getProfileImagePath() != null) {
+			deleteProfileImage(userProfile.getProfileImagePath());
 		}
 		
 		// DB에서 삭제 (Cascade 설정으로 DetailInfo도 함께 삭제됨)
-		basicInfoRepository.delete(basicInfo);
+		repository.delete(user);
 		
 		log.info("회원 탈퇴 완료 - 사용자 ID: {}", userId);
 	}
@@ -272,19 +292,19 @@ public class UserInfoService {
 	// MyPageService 위임 호출용
 	// 기존 프로필 이미지를 삭제하고 새로운 프로필 이미지 저장 후 경로 반환
     public String updateProfileImage(Long userId, MultipartFile newImage) throws IOException {
-        DetailInfo detailInfo = detailInfoRepository.findByBasicInfoId(userId)
+        UserProfile userProfile = detailInfoRepository.findByBasicInfoId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("상세 정보를 찾을 수 없습니다. ID: " + userId));
 
         // 기존 이미지 삭제
-        if (detailInfo.getProfileImagePath() != null) {
-            deleteProfileImage(detailInfo.getProfileImagePath());
+        if (userProfile.getProfileImagePath() != null) {
+            deleteProfileImage(userProfile.getProfileImagePath());
         }
 
         // 새 이미지 저장
         String newPath = saveProfileImage(newImage);
-        detailInfo.setProfileImagePath(newPath);
-        detailInfoRepository.save(detailInfo);
+        userProfile.setProfileImagePath(newPath);
+        detailInfoRepository.save(userProfile);
 
         return newPath;
-    }
+    }*/
 }
