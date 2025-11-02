@@ -1,20 +1,10 @@
 package project.backend.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDate;
-
 @Getter
-@AllArgsConstructor
-public class SignUpRequestDTO {
+public class UserProfileDTO {
 
-    // 기본정보
-    private String name;
-    private LocalDate birthdate;
-    private UserEnums.Gender gender;
-
-    // 상세정보
     private UserEnums.Job job;
     private String region;
     private UserEnums.DrinkingFrequency drinkingFrequency;
@@ -24,10 +14,4 @@ public class SignUpRequestDTO {
     private UserEnums.Religion religion;
     private UserEnums.ContactFrequency contactFrequency;
     private UserEnums.Mbti mbti;
-
-    //자기소개서
-    private String introduction;
-
-    //이미지 url...?
-    //private String profileImage;
 }

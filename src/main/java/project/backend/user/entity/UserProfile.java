@@ -3,12 +3,13 @@ package project.backend.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import project.backend.user.dto.UserEnums;
+import project.backend.user.dto.UserProfileDTO;
 
 @Entity
 @Table(name = "user_profiles")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class UserProfile {
 
@@ -21,7 +22,7 @@ public class UserProfile {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	private String profileImagePath;
+	//private String profileImagePath;
 
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Job job;
@@ -39,6 +40,7 @@ public class UserProfile {
 	@Enumerated(EnumType.STRING)
 	private UserEnums.PetPreference petPreference;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Religion religion;
 
@@ -48,4 +50,50 @@ public class UserProfile {
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Mbti mbti;
 
+	public void updateUserProfile(UserProfileDTO userProfileDTO) {
+		if (userProfileDTO.getJob() != null) {
+			this.job = userProfileDTO.getJob();
+		}
+		if (userProfileDTO.getRegion() != null) {
+			this.region = userProfileDTO.getRegion();
+		}
+		if (userProfileDTO.getDrinkingFrequency() != null) {
+			this.drinkingFrequency = userProfileDTO.getDrinkingFrequency();
+		}
+		if (userProfileDTO.getSmokingStatus() != null) {
+			this.smokingStatus = userProfileDTO.getSmokingStatus();
+		}
+		if (userProfileDTO.getHeight() != null) {
+			this.height = userProfileDTO.getHeight();
+		}
+		if (userProfileDTO.getPetPreference() != null) {
+			this.petPreference = userProfileDTO.getPetPreference();
+		}
+		if (userProfileDTO.getReligion() != null) {
+			this.religion = userProfileDTO.getReligion();
+		}
+		if (userProfileDTO.getContactFrequency() != null) {
+			this.contactFrequency = userProfileDTO.getContactFrequency();
+		}
+		if (userProfileDTO.getMbti() != null) {
+			this.mbti = userProfileDTO.getMbti();
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "UserProfile{" +
+				"id=" + id +
+				", user=" + user +
+				", job=" + job +
+				", region='" + region + '\'' +
+				", drinkingFrequency=" + drinkingFrequency +
+				", smokingStatus=" + smokingStatus +
+				", height=" + height +
+				", petPreference=" + petPreference +
+				", religion=" + religion +
+				", contactFrequency=" + contactFrequency +
+				", mbti=" + mbti +
+				'}';
+	}
 }

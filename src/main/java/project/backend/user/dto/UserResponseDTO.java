@@ -1,10 +1,10 @@
 package project.backend.user.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@Builder
+@AllArgsConstructor
 public class UserResponseDTO {
 
     private Long id;

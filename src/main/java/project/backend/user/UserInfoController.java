@@ -15,6 +15,7 @@ import project.backend.user.dto.UserResponseDTO;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserInfoController {
+
 	private final UserService userService;
 
 	// 기본 정보 저장
