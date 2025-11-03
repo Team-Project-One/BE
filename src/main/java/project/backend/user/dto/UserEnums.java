@@ -7,6 +7,10 @@ public class UserEnums {
         FEMALE
     }
 
+    public enum SexualOrientation {
+        STRAIGHT, HOMOSEXUAL
+    }
+
     public enum Job {
         UNEMPLOYED,
         STUDENT,

@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class UserProfileDTO {
 
+    private UserEnums.SexualOrientation  sexualorientation;
     private UserEnums.Job job;
     private String region;
     private UserEnums.DrinkingFrequency drinkingFrequency;

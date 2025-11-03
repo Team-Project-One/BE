@@ -30,6 +30,7 @@ public class UserService {
 	@Transactional
 	public UserResponseDTO registerNewUser(SignUpRequestDTO requestDTO) {
 		UserProfile userProfile = UserProfile.builder()
+				.sexualOrientation(requestDTO.getSexualorientation())
 				.job(requestDTO.getJob())
 				.region(requestDTO.getRegion())
 				.drinkingFrequency(requestDTO.getDrinkingFrequency())

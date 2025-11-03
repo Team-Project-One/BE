@@ -18,6 +18,7 @@ public class MyPageDisplayDTO {
     private LocalDate birthDate;
 
     // UserProfile 정보
+    private UserEnums.SexualOrientation sexualOrientation;
     private UserEnums.Job job;
     private String region;
     private UserEnums.DrinkingFrequency drinkingFrequency;
@@ -36,6 +37,7 @@ public class MyPageDisplayDTO {
         this.birthDate = user.getBirthDate();
 
         if (profile != null) {
+            this.sexualOrientation = profile.getSexualOrientation();
             this.job = profile.getJob();
             this.region = profile.getRegion();
             this.drinkingFrequency = profile.getDrinkingFrequency();

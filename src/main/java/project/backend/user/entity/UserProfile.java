@@ -25,6 +25,9 @@ public class UserProfile {
 	//private String profileImagePath;
 
 	@Enumerated(EnumType.STRING)
+	private UserEnums.SexualOrientation sexualOrientation;
+
+	@Enumerated(EnumType.STRING)
 	private UserEnums.Job job;
 
 	private String region;
@@ -51,6 +54,9 @@ public class UserProfile {
 	private UserEnums.Mbti mbti;
 
 	public void updateUserProfile(UserProfileDTO userProfileDTO) {
+		if (userProfileDTO.getSexualorientation() != null) {
+			this.sexualOrientation =  userProfileDTO.getSexualorientation();
+		}
 		if (userProfileDTO.getJob() != null) {
 			this.job = userProfileDTO.getJob();
 		}
@@ -78,22 +84,5 @@ public class UserProfile {
 		if (userProfileDTO.getMbti() != null) {
 			this.mbti = userProfileDTO.getMbti();
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "UserProfile{" +
-				"id=" + id +
-				", user=" + user +
-				", job=" + job +
-				", region='" + region + '\'' +
-				", drinkingFrequency=" + drinkingFrequency +
-				", smokingStatus=" + smokingStatus +
-				", height=" + height +
-				", petPreference=" + petPreference +
-				", religion=" + religion +
-				", contactFrequency=" + contactFrequency +
-				", mbti=" + mbti +
-				'}';
 	}
 }
