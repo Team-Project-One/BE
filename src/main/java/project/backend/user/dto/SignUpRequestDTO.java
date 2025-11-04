@@ -17,7 +17,7 @@ public class SignUpRequestDTO {
     // 상세정보
     private UserEnums.SexualOrientation sexualorientation;
     private UserEnums.Job job;
-    private String region;
+    private UserEnums.region region;
     private UserEnums.DrinkingFrequency drinkingFrequency;
     private UserEnums.SmokingStatus smokingStatus;
     private Integer height;

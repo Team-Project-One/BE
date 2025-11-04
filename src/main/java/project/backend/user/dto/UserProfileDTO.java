@@ -7,7 +7,7 @@ public class UserProfileDTO {
 
     private UserEnums.SexualOrientation  sexualorientation;
     private UserEnums.Job job;
-    private String region;
+    private UserEnums.region region;
     private UserEnums.DrinkingFrequency drinkingFrequency;
     private UserEnums.SmokingStatus smokingStatus;
     private Integer height;

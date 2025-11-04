@@ -20,7 +20,7 @@ public class MyPageDisplayDTO {
     // UserProfile 정보
     private UserEnums.SexualOrientation sexualOrientation;
     private UserEnums.Job job;
-    private String region;
+    private UserEnums.region region;
     private UserEnums.DrinkingFrequency drinkingFrequency;
     private UserEnums.SmokingStatus smokingStatus;
     private Integer height;

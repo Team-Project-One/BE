@@ -17,6 +17,27 @@ public class UserEnums {
         EMPLOYEE
     }
 
+    public enum region {
+        SEOUL,
+        Seoul,
+        Gyeonggi_do,
+        Incheon,
+        Busan,
+        Daegu,
+        Gwangju,
+        Daejeon,
+        Ulsan,
+        Sejong,
+        Gangwon_do,
+        Chungcheongbuk_do,
+        Chungcheongnam_do,
+        Jeollabuk_do,
+        Jeollanam_do,
+        Gyeongsangbuk_do,
+        Gyeongsangnam_do,
+        Jeju_do,
+    }
+
     public enum DrinkingFrequency {
         NONE,
         ONCE_OR_TWICE_PER_WEEK,

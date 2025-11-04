@@ -30,7 +30,8 @@ public class UserProfile {
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Job job;
 
-	private String region;
+	@Enumerated(EnumType.STRING)
+	private UserEnums.region region;
 
 	@Enumerated(EnumType.STRING)
 	private UserEnums.DrinkingFrequency drinkingFrequency;
