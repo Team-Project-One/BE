@@ -28,6 +28,7 @@ public class MyPageDisplayDTO {
     private UserEnums.Religion religion;
     private UserEnums.ContactFrequency contactFrequency;
     private UserEnums.Mbti mbti;
+    private String introduction;
 
     @Builder
     public MyPageDisplayDTO(User user, UserProfile profile) {
@@ -47,6 +48,7 @@ public class MyPageDisplayDTO {
             this.religion = profile.getReligion();
             this.contactFrequency = profile.getContactFrequency();
             this.mbti = profile.getMbti();
+            this.introduction = profile.getIntroduction();
         }
     }
 

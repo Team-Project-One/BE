@@ -54,6 +54,8 @@ public class UserProfile {
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Mbti mbti;
 
+	private String introduction;
+
 	public void updateUserProfile(UserProfileDTO userProfileDTO) {
 		if (userProfileDTO.getSexualorientation() != null) {
 			this.sexualOrientation =  userProfileDTO.getSexualorientation();
@@ -84,6 +86,9 @@ public class UserProfile {
 		}
 		if (userProfileDTO.getMbti() != null) {
 			this.mbti = userProfileDTO.getMbti();
+		}
+		if (userProfileDTO.getIntroduction() != null) {
+			this.introduction = userProfileDTO.getIntroduction();
 		}
 	}
 }

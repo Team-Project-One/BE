@@ -40,6 +40,7 @@ public class UserService {
 				.religion(requestDTO.getReligion())
 				.contactFrequency(requestDTO.getContactFrequency())
 				.mbti(requestDTO.getMbti())
+				.introduction(requestDTO.getIntroduction())
 				.build();
 
 		User user = User.builder()

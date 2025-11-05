@@ -15,4 +15,5 @@ public class UserProfileDTO {
     private UserEnums.Religion religion;
     private UserEnums.ContactFrequency contactFrequency;
     private UserEnums.Mbti mbti;
+    private String introduction;
 }
