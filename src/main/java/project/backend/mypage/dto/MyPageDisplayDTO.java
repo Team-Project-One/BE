@@ -29,6 +29,7 @@ public class MyPageDisplayDTO {
     private UserEnums.ContactFrequency contactFrequency;
     private UserEnums.Mbti mbti;
     private String introduction;
+    private String profileImagePath;
 
     @Builder
     public MyPageDisplayDTO(User user, UserProfile profile) {
@@ -49,6 +50,7 @@ public class MyPageDisplayDTO {
             this.contactFrequency = profile.getContactFrequency();
             this.mbti = profile.getMbti();
             this.introduction = profile.getIntroduction();
+            this.profileImagePath = profile.getProfileImagePath();
         }
     }
 

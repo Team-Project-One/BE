@@ -1,7 +1,10 @@
 package project.backend.mypage;
 
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import project.backend.mypage.dto.MyPageDisplayDTO;
@@ -32,7 +35,16 @@ public class MyPageController {
 		return ResponseEntity.ok().build();
 	}
 
-	
+	// 마이페이지 프로필 이미지 수정
+	@PatchMapping(value = "/{userId}/profile-image", consumes = "multipart/form-data")
+	public ResponseEntity<String> updateProfileImage(
+			@PathVariable("userId") Long userId,
+			@RequestPart("profileImage") MultipartFile profileImage) throws IOException {
+		String imagePath = myPageService.updateProfileImage(userId, profileImage);
+
+		return ResponseEntity.ok(imagePath);
+	}
+
 	// 회원 탈퇴
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<Long> deleteUser(@PathVariable("userId") Long userId) {

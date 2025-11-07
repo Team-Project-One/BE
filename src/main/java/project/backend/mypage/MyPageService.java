@@ -1,10 +1,11 @@
 package project.backend.mypage;
 
-import java.time.LocalDate;
-import java.time.Period;
+import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import project.backend.mypage.dto.MyPageDisplayDTO;
@@ -29,14 +30,16 @@ public class MyPageService {
         userService.updateUserProfileInfo(userId, userProfileDTO);
     }
 
+	// user 프로필 사진 수정
+	@Transactional
+	public String updateProfileImage(Long userId, MultipartFile profileImage) throws IOException {
+		return userService.updateUserProfileImage(userId, profileImage);
+	}
+
 	// 회원 탈퇴
 	@Transactional
 	public void deleteUser(Long userId) {
 		userService.deleteUser(userId);
 	}
 	
-	// 나이 계산 (만 나이) 아직 사용 x
-	private Integer calculateAge(LocalDate birthDate) {
-		return (birthDate == null) ? null : Period.between(birthDate, LocalDate.now()).getYears();
-	}
 }

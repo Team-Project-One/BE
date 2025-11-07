@@ -22,7 +22,8 @@ public class UserProfile {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	//private String profileImagePath;
+	@Setter
+	private String profileImagePath;
 
 	@Enumerated(EnumType.STRING)
 	private UserEnums.SexualOrientation sexualOrientation;
