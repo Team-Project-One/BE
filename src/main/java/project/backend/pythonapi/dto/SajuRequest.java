@@ -1,4 +1,4 @@
-package project.backend.pythonapi;
+package project.backend.pythonapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

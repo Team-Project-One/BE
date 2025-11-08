@@ -1,4 +1,4 @@
-package project.backend.pythonapi;
+package project.backend.pythonapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

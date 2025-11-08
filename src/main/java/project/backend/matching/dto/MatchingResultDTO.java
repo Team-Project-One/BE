@@ -1,9 +1,9 @@
-package project.backend.matching;
+package project.backend.matching.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import project.backend.mypage.dto.MyPageDisplayDTO;
-import project.backend.pythonapi.SajuResponse;
+import project.backend.pythonapi.dto.SajuResponse;
 
 @Getter
 @Builder
