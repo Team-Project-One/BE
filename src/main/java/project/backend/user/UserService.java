@@ -34,7 +34,7 @@ public class UserService {
 	@Transactional
 	public UserResponseDTO registerNewUser(SignUpRequestDTO requestDTO, MultipartFile profileImage) throws IOException {
 		UserProfile userProfile = UserProfile.builder()
-				.sexualOrientation(requestDTO.getSexualorientation())
+				.sexualOrientation(requestDTO.getSexualOrientation())
 				.job(requestDTO.getJob())
 				.region(requestDTO.getRegion())
 				.drinkingFrequency(requestDTO.getDrinkingFrequency())

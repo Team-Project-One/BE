@@ -58,8 +58,8 @@ public class UserProfile {
 	private String introduction;
 
 	public void updateUserProfile(UserProfileDTO userProfileDTO) {
-		if (userProfileDTO.getSexualorientation() != null) {
-			this.sexualOrientation =  userProfileDTO.getSexualorientation();
+		if (userProfileDTO.getSexualOrientation() != null) {
+			this.sexualOrientation =  userProfileDTO.getSexualOrientation();
 		}
 		if (userProfileDTO.getJob() != null) {
 			this.job = userProfileDTO.getJob();
