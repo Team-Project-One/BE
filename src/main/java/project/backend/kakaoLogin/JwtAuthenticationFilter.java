@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final KakaoUserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // DB에서 사용자 조회
-        User user = userRepository.findByEmail(subject)
+        KakaoUser user = userRepository.findByEmail(subject)
                 .orElseGet(() -> userRepository.findByKakaoId(subject).orElse(null));
 
         if (user == null) {

@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KakaoOAuthService {
 
-	private final UserRepository userRepository;
+	private final KakaoUserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -85,11 +85,11 @@ public class KakaoOAuthService {
         String email = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
 
         // DB 사용자 확인/저장
-        Optional<User> existingUser = userRepository.findByKakaoId(kakaoId);
+        Optional<KakaoUser> existingUser = userRepository.findByKakaoId(kakaoId);
         boolean isNewUser = existingUser.isEmpty();
 
-        User user = existingUser.orElseGet(() -> {
-            User newUser = User.builder()
+        KakaoUser user = existingUser.orElseGet(() -> {
+            KakaoUser newUser = KakaoUser.builder()
                     .kakaoId(kakaoId)
                     .email(email)
                     .role(Role.USER)

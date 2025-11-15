@@ -14,7 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import project.backend.entity.BasicInfo;
+import project.backend.user.entity.User;
 
 @Entity
 @Getter
@@ -22,7 +22,7 @@ import project.backend.entity.BasicInfo;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class KakaoUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -38,5 +38,5 @@ public class User {
 	private Role role = Role.USER;
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private BasicInfo basicInfo;
+	private User user;
 }
