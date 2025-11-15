@@ -1,4 +1,4 @@
-package project.backend.kakaoLogin;
+package project.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
+    private static final String[] SWAGGER_URLS = {
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -27,7 +35,8 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
             	// 테스트를 위해 "/api/**"를 추가함, 추후 보안 고려 시 세밀하게 관리하도록 수정하는 게 좋음	
                 .requestMatchers("/auth/**", "/login/**", "/api/**", "/oauth2/**").permitAll()
-                .anyRequest().authenticated()
+                    .requestMatchers(SWAGGER_URLS).permitAll()
+                    .anyRequest().authenticated()
             )
             // OAuth2 로그인 설정
             .oauth2Login(oauth -> oauth
