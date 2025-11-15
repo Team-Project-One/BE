@@ -37,6 +37,6 @@ public class KakaoUser {
 	@Builder.Default
 	private Role role = Role.USER;
 	
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "kakaoUser", cascade = CascadeType.ALL)
 	private User user;
 }

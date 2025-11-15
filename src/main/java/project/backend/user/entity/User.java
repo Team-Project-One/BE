@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 import lombok.*;
+import project.backend.kakaoLogin.KakaoUser;
 import project.backend.user.dto.UserEnums;
 
 @Entity
@@ -25,6 +26,10 @@ public class User {
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private UserProfile userProfile;
+
+	@OneToOne
+	@JoinColumn(name = "kakao_user_id")
+	private KakaoUser kakaoUser;
 
 	@Builder
 	public User(String name, UserEnums.Gender gender, LocalDate birthDate, UserProfile userProfile) {
