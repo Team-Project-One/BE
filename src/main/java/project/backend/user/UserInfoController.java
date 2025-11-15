@@ -2,6 +2,7 @@ package project.backend.user;
 
 import java.io.IOException;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import project.backend.user.dto.UserResponseDTO;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Tag(name = "회원가입", description = "json 유저 정보 + 사진파일 필요")
 public class UserInfoController {
 
 	private final UserService userService;

@@ -1,5 +1,6 @@
 package project.backend.openai;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ai")
+@Tag(name = "spring-ai-controller", description = "프런트에서 사용할 필요 X")
 public class OpenAiController {
 
     private final OpenAiService openAiService;
