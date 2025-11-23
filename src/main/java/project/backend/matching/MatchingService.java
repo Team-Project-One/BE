@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.backend.matching.dto.MatchingResultDTO;
+import project.backend.matching.entity.MatchSajuInfo;
 import project.backend.mypage.dto.MyPageDisplayDTO;
 import project.backend.openai.OpenAiService;
 import project.backend.pythonapi.dto.PersonInfo;
@@ -26,7 +27,7 @@ public class MatchingService {
 
     private final SajuService sajuService;
     private final UserRepository userRepository;
-    private final OpenAiService openAiService;
+    private final MatchSajuInfoRepository matchSajuInfoRepository;
 
     //전체 매칭하기 기능 반환
     public MatchingResultDTO getMatchingResult(Long userId) throws Exception {
@@ -61,6 +62,19 @@ public class MatchingService {
                 );
         Mono<SajuResponse> sajuResponseMono = getSajuResponse(sajuRequest);
         SajuResponse sajuResponse = sajuResponseMono.block();
+
+        MatchSajuInfo matchInfo = MatchSajuInfo.builder()
+                .user(user)
+                .matchedUser(randomUser)
+                .originalScore(sajuResponse.originalScore())
+                .finalScore(sajuResponse.finalScore())
+                .stressScore(sajuResponse.stressScore())
+                .person1SalAnalysis(sajuResponse.person1SalAnalysis())
+                .person2SalAnalysis(sajuResponse.person2SalAnalysis())
+                .matchAnalysis(sajuResponse.matchAnalysis())
+                .build();
+
+        matchSajuInfoRepository.save(matchInfo);
 
         MyPageDisplayDTO myPageDisplayDTO = new MyPageDisplayDTO(randomUser, randomUser.getUserProfile());
 

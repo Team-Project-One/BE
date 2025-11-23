@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import project.backend.chat.dto.ChatRoomDTO;
 import project.backend.chat.entity.ChatRoom;
 import project.backend.chat.repository.ChatRoomRepository;
+import project.backend.matching.MatchSajuInfoRepository;
+import project.backend.matching.entity.MatchSajuInfo;
+import project.backend.pythonapi.dto.SajuResponse;
 import project.backend.user.UserRepository;
 import project.backend.user.entity.User;
 
@@ -21,6 +24,7 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
+    private final MatchSajuInfoRepository matchSajuInfoRepository;
 
     /**
      * 1:1 채팅방 생성 또는 조회
@@ -72,5 +76,32 @@ public class ChatRoomService {
         }
 
         chatRoomRepository.delete(room);
+    }
+
+    //채팅방 내에서 상대방과 내 궁합점수 조회
+    public SajuResponse getSajuInfoInRoom(Long roomId, Long currentUserId) {
+        ChatRoom room = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("ChatRoom not found: " + roomId));
+
+        User me = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
+
+        User partner = room.getOtherParticipant(me);
+        if (partner == null) {
+            throw new EntityNotFoundException("Partner not found in this room");
+        }
+
+        MatchSajuInfo info = matchSajuInfoRepository.findByUsers(me, partner)
+                .orElseThrow(() -> new IllegalArgumentException("두 유저 사이의 궁합 정보가 없습니다."));
+
+        return new SajuResponse(
+                info.getOriginalScore(),
+                info.getFinalScore(),
+                info.getStressScore(),
+                info.getPerson1SalAnalysis(),
+                info.getPerson2SalAnalysis(),
+                info.getMatchAnalysis(),
+                null
+        );
     }
 }

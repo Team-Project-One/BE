@@ -13,6 +13,7 @@ import project.backend.chat.dto.ChatMessageDTO;
 import project.backend.chat.dto.ChatRoomDTO;
 import project.backend.chat.dto.CreateChatRoomRequest;
 import project.backend.kakaoLogin.KakaoUser;
+import project.backend.pythonapi.dto.SajuResponse;
 
 import java.util.List;
 
@@ -82,5 +83,21 @@ public class ChatRoomController {
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(403).build(); // 권한 없음 (403 Forbidden)
         }
+    }
+
+    @Operation(summary = "채팅방 궁합 점수 조회", description = "채팅방 ID를 통해 저장된 두 사람의 사주 궁합 결과를 조회")
+    @GetMapping("/room/{roomId}/saju")
+    public ResponseEntity<SajuResponse> getSajuInfo(
+            @PathVariable Long roomId,
+            @AuthenticationPrincipal KakaoUser kakaoUser) {
+
+        if (kakaoUser.getUser() == null) {
+            return ResponseEntity.status(403).build();
+        }
+        Long currentUserId = kakaoUser.getUser().getId();
+
+        SajuResponse response = chatRoomService.getSajuInfoInRoom(roomId, currentUserId);
+
+        return ResponseEntity.ok(response);
     }
 }
