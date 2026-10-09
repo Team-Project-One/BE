@@ -14,7 +14,16 @@ public class MatchingController {
     private final MatchingService matchingService;
 
     @GetMapping("/{userId}")
-    public MatchingResultDTO getMatchingResult(@PathVariable("userId") Long userId) throws Exception {
-        return matchingService.getMatchingResult(userId);
+    public MatchingResultDTO getMatchingResult(
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "excludeUserId", required = false) Long excludeUserId) throws Exception {
+        return matchingService.getMatchingResult(userId, excludeUserId);
+    }
+
+    @GetMapping("/{myUserId}/{matchedUserId}")
+    public MatchingResultDTO getMatchingResultWithMatchedUser(
+            @PathVariable("myUserId") Long myUserId,
+            @PathVariable("matchedUserId") Long matchedUserId) throws Exception {
+        return matchingService.getMatchingResultWithMatchedUser(myUserId, matchedUserId);
     }
 }

@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class MatchingService {
     private final MatchSajuInfoRepository matchSajuInfoRepository;
 
     //전체 매칭하기 기능 반환
-    public MatchingResultDTO getMatchingResult(Long userId) throws Exception {
+    public MatchingResultDTO getMatchingResult(Long userId, Long excludeUserId) throws Exception {
 
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
@@ -42,7 +43,7 @@ public class MatchingService {
             userGender = 1;
         }
 
-        User randomUser = randomUser(user);
+        User randomUser = randomUser(user, excludeUserId);
         int randomUserGender = 0;
         if (randomUser.getGender() == UserEnums.Gender.MALE) {
             randomUserGender = 1;
@@ -81,8 +82,66 @@ public class MatchingService {
         return MatchingResultDTO.builder().sajuResponse(sajuResponse).personInfo(myPageDisplayDTO).build();
     }
 
+    //특정 상대방과의 매칭 결과 반환
+    public MatchingResultDTO getMatchingResultWithMatchedUser(Long myUserId, Long matchedUserId) throws Exception {
+        Optional<User> myUserOptional = userRepository.findById(myUserId);
+        if (myUserOptional.isEmpty()) {
+            throw new Exception("내 사용자 정보를 찾을 수 없습니다. userId: " + myUserId);
+        }
+        User myUser = myUserOptional.get();
+
+        Optional<User> matchedUserOptional = userRepository.findById(matchedUserId);
+        if (matchedUserOptional.isEmpty()) {
+            throw new Exception("매칭된 사용자 정보를 찾을 수 없습니다. userId: " + matchedUserId);
+        }
+        User matchedUser = matchedUserOptional.get();
+
+        // 항상 같은 순서로 정렬하기 위해 userId가 작은 쪽을 person1, 큰 쪽을 person2로 설정
+        User person1User, person2User;
+        boolean isMyUserPerson1;
+        if (myUserId <= matchedUserId) {
+            person1User = myUser;
+            person2User = matchedUser;
+            isMyUserPerson1 = true;
+        } else {
+            person1User = matchedUser;
+            person2User = myUser;
+            isMyUserPerson1 = false;
+        }
+
+        int person1Gender = 0;
+        if (person1User.getGender() == UserEnums.Gender.MALE) {
+            person1Gender = 1;
+        }
+
+        int person2Gender = 0;
+        if (person2User.getGender() == UserEnums.Gender.MALE) {
+            person2Gender = 1;
+        }
+
+        SajuRequest sajuRequest = new SajuRequest(
+                new PersonInfo(
+                        person1User.getBirthDate().getYear(),
+                        person1User.getBirthDate().getMonthValue(),
+                        person1User.getBirthDate().getDayOfMonth(),
+                        person1Gender),
+                new PersonInfo(
+                        person2User.getBirthDate().getYear(),
+                        person2User.getBirthDate().getMonthValue(),
+                        person2User.getBirthDate().getDayOfMonth(),
+                        person2Gender)
+        );
+        Mono<SajuResponse> sajuResponseMono = getSajuResponse(sajuRequest);
+        SajuResponse sajuResponse = sajuResponseMono.block();
+
+        // 응답의 personInfo는 항상 상대방(matchedUser) 정보를 반환
+        MyPageDisplayDTO myPageDisplayDTO = new MyPageDisplayDTO(matchedUser, matchedUser.getUserProfile());
+
+        return MatchingResultDTO.builder().sajuResponse(sajuResponse).personInfo(myPageDisplayDTO).build();
+    }
+
     //랜덤으로 상대방 불러오기(지역 + 씹게이 판별)
-    private User randomUser(User myUser) {
+    private User randomUser(User myUser, Long excludeUserId) {
         UserEnums.region region = myUser.getUserProfile().getRegion();
         UserEnums.SexualOrientation sexualOrientation = myUser.getUserProfile().getSexualOrientation();
         UserEnums.Gender myGender = myUser.getGender();
@@ -104,6 +163,13 @@ public class MatchingService {
                     sexualOrientation,
                     myUser.getId()
             );
+        }
+
+        // excludeUserId가 있으면 해당 사용자 제외
+        if (excludeUserId != null) {
+            matchingUsers = matchingUsers.stream()
+                    .filter(u -> !u.getId().equals(excludeUserId))
+                    .collect(Collectors.toList());
         }
 
         if (matchingUsers.isEmpty()) {
