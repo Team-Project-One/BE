@@ -46,6 +46,12 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     public ResponseEntity<List<ChatRoomDTO>> getMyChatRooms(@AuthenticationPrincipal KakaoUser kakaoUser) {
 
+        // 인증 정보 또는 회원 정보가 없는 경우 방어 코드
+        if (kakaoUser == null || kakaoUser.getUser() == null) {
+            // 회원가입 미완료 또는 인증 정보 없음
+            return ResponseEntity.status(403).build();
+        }
+
         Long currentUserId = kakaoUser.getUser().getId();
         List<ChatRoomDTO> rooms = chatRoomService.getUserChatRooms(currentUserId);
         return ResponseEntity.ok(rooms);

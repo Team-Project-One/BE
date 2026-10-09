@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import project.backend.chat.dto.SendChatMessageRequest;
+import project.backend.chat.dto.TypingStatusRequest;
 
 import java.security.Principal;
 
@@ -25,5 +26,16 @@ public class ChatController {
                 senderUserId, messageRequest.getRoomId(), messageRequest.getContent());
 
         chatMessageService.sendMessage(senderUserId, messageRequest);
+    }
+
+    @MessageMapping("/chat/typing")
+    public void handleTyping(TypingStatusRequest typingRequest, Principal principal) {
+        String senderUserIdStr = principal.getName();
+        Long senderUserId = Long.parseLong(senderUserIdStr);
+
+        log.debug("Typing status from User.id {}: roomId={}, typing={}",
+                senderUserId, typingRequest.getRoomId(), typingRequest.isTyping());
+
+        chatMessageService.sendTypingStatus(senderUserId, typingRequest);
     }
 }
