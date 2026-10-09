@@ -13,4 +13,6 @@ public class JwtTokenResponse {
 	private String accessToken;
 	private String refreshToken;
 	private boolean isNewUser; // 기본 정보 없음 -> 신규 가입자
+	private String kakaoId;
+	private String email;
 }

@@ -2,6 +2,8 @@ package project.backend.chat;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +16,12 @@ import project.backend.pythonapi.dto.SajuResponse;
 import project.backend.user.UserRepository;
 import project.backend.user.entity.User;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,6 +30,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
     private final MatchSajuInfoRepository matchSajuInfoRepository;
+    private final SimpMessageSendingOperations messagingTemplate;
 
     /**
      * 1:1 채팅방 생성 또는 조회
@@ -75,7 +81,27 @@ public class ChatRoomService {
             throw new AccessDeniedException("User is not a participant of this chat room.");
         }
 
+        // 상대방 조회 (채팅방 삭제 전에)
+        User otherUser = room.getOtherParticipant(currentUser);
+        
+        // 채팅방 삭제
         chatRoomRepository.delete(room);
+
+        // 상대방에게 채팅방 나가기 이벤트 전송
+        if (otherUser != null) {
+            Map<String, Object> leaveEvent = new HashMap<>();
+            leaveEvent.put("type", "ROOM_LEFT");
+            leaveEvent.put("roomId", roomId);
+            leaveEvent.put("message", "상대방이 채팅방을 나갔습니다.");
+            
+            messagingTemplate.convertAndSendToUser(
+                    String.valueOf(otherUser.getId()),
+                    "/queue/chat-room-event",
+                    leaveEvent
+            );
+            
+            log.info("Room leave event sent to User {} for room {}", otherUser.getId(), roomId);
+        }
     }
 
     //채팅방 내에서 상대방과 내 궁합점수 조회

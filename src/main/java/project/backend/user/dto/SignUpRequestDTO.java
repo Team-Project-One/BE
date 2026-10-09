@@ -2,12 +2,19 @@ package project.backend.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequestDTO {
+
+    private String kakaoId;
+    private String email;
 
     // 기본정보
     private String name;
