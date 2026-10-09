@@ -12,9 +12,9 @@ public class FortuneService {
 
     private final OpenAiService openAiService;
 
-    @Cacheable(value = "fortunes" ,key = "T(java.time.LocalDate).now().toString()")
-    public FortuneDTO getTodayFortune() {
-        return openAiService.getTodayFortune();
+    @Cacheable(value = "fortunes", key = "T(java.time.LocalDate).now().toString() + ':' + #birthDate")
+    public FortuneDTO getTodayFortune(String birthDate) {
+        return openAiService.getTodayFortune(birthDate);
     }
 }
 
