@@ -72,6 +72,7 @@ public class UserEnums {
         INTJ, INTP, ENTJ, ENTP,
         INFJ, INFP, ENFJ, ENFP,
         ISTJ, ISFJ, ESTJ, ESFJ,
-        ISTP, ISFP, ESTP, ESFP
+        ISTP, ISFP, ESTP, ESFP,
+        UNKNOWN // 사용자가 MBTI를 선택하지 않은 경우
     }
 }

@@ -33,8 +33,22 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 // 요청별 인가 규칙
                 .authorizeHttpRequests(auth -> auth
-                        // 테스트를 위해 "/api/**"를 추가함, 추후 보안 고려 시 세밀하게 관리하도록 수정하는 게 좋음
-                        .requestMatchers("/auth/**", "/login/**", "/api/**", "/oauth2/**", "/ws/chat/**").permitAll()
+                        // 테스트를 위해 "/api/**" 및 "/ai/**"를 추가함, 추후 보안 고려 시 세밀하게 관리하도록 수정하는 게 좋음
+                        .requestMatchers(
+                                "/auth/**",
+                                "/login/**",
+                                "/api/**",
+                                "/ai/**",
+                                "/oauth2/**",
+                                "/uploads/**",
+                                "/ws/chat/**",
+                                "/users/signup",
+                                "/users/status/**",
+                                "/my-page/**",
+                                "/fortune/**",
+                                "/auth/test-login",
+                                "/matching/**"
+                        ).permitAll()
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -42,6 +56,9 @@ public class WebSecurityConfig {
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/auth/kakao/callback", true)
                 )
+                // JWT 사용 시 기본 폼 로그인 사용하지 않음
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 // 세션 비활성화 (JWT 사용 시)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

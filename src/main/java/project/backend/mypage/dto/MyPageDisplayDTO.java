@@ -11,13 +11,11 @@ import java.time.LocalDate;
 @Getter
 public class MyPageDisplayDTO {
 
-    // User 정보
     private Long userId;
     private String name;
     private UserEnums.Gender gender;
     private LocalDate birthDate;
 
-    // UserProfile 정보
     private UserEnums.SexualOrientation sexualOrientation;
     private UserEnums.Job job;
     private UserEnums.region region;

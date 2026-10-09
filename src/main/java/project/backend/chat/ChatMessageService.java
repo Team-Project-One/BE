@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.backend.chat.dto.ChatMessageDTO;
 import project.backend.chat.dto.SendChatMessageRequest;
+import project.backend.chat.dto.TypingStatusRequest;
 import project.backend.chat.entity.ChatMessage;
 import project.backend.chat.entity.ChatRoom;
 import project.backend.chat.repository.ChatMessageRepository;
@@ -81,6 +82,30 @@ public class ChatMessageService {
         );
 
         log.info("Message sent from User {} to User {}", senderUser.getId(), receiverUser.getId());
+    }
+
+    /**
+     * 상대방 입력 상태 전달 (DB 저장 없이 WebSocket으로만 전송)
+     */
+    @Transactional(readOnly = true)
+    public void sendTypingStatus(Long senderUserId, TypingStatusRequest request) {
+        ChatRoom room = chatRoomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new EntityNotFoundException("ChatRoom not found: " + request.getRoomId()));
+
+        User senderUser = userRepository.findById(senderUserId)
+                .orElseThrow(() -> new EntityNotFoundException("Sender User not found: " + senderUserId));
+
+        User receiverUser = room.getOtherParticipant(senderUser);
+        if (receiverUser == null) {
+            log.warn("Receiver not found for typing status in room {}", request.getRoomId());
+            return;
+        }
+
+        messagingTemplate.convertAndSendToUser(
+                String.valueOf(receiverUser.getId()),
+                "/queue/chat-typing",
+                request
+        );
     }
 
     /**
