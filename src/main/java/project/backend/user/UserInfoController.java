@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import project.backend.user.dto.SignUpRequestDTO;
 import project.backend.user.dto.UserResponseDTO;
+import project.backend.user.dto.UserStatusDTO;
 
 @RestController
 @RequestMapping("/users")
@@ -29,5 +30,10 @@ public class UserInfoController {
 		UserResponseDTO response = userService.registerNewUser(requestDTO, profileImage);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@GetMapping("/status/{kakaoId}")
+	public ResponseEntity<UserStatusDTO> getUserStatus(@PathVariable String kakaoId) {
+		return ResponseEntity.ok(userService.getUserStatusByKakaoId(kakaoId));
 	}
 }

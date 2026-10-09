@@ -25,23 +25,30 @@ public class UserProfile {
 	@Setter
 	private String profileImagePath;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.SexualOrientation sexualOrientation;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Job job;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.region region;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.DrinkingFrequency drinkingFrequency;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.SmokingStatus smokingStatus;
 
+	@Setter
 	private Integer height;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.PetPreference petPreference;
 
@@ -49,12 +56,15 @@ public class UserProfile {
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Religion religion;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.ContactFrequency contactFrequency;
 
+	@Setter
 	@Enumerated(EnumType.STRING)
 	private UserEnums.Mbti mbti;
 
+	@Setter
 	private String introduction;
 
 	public void updateUserProfile(UserProfileDTO userProfileDTO) {
@@ -86,7 +96,12 @@ public class UserProfile {
 			this.contactFrequency = userProfileDTO.getContactFrequency();
 		}
 		if (userProfileDTO.getMbti() != null) {
-			this.mbti = userProfileDTO.getMbti();
+			// UNKNOWN은 "설정 안 됨" 의미로 사용하고, DB에는 null로 저장
+			if (userProfileDTO.getMbti() == UserEnums.Mbti.UNKNOWN) {
+				this.mbti = null;
+			} else {
+				this.mbti = userProfileDTO.getMbti();
+			}
 		}
 		if (userProfileDTO.getIntroduction() != null) {
 			this.introduction = userProfileDTO.getIntroduction();

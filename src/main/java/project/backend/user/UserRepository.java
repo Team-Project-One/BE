@@ -14,8 +14,11 @@ import project.backend.user.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT u FROM User u JOIN FETCH u.userProfile WHERE u.id = :id")
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.userProfile WHERE u.id = :id")
     Optional<User> findByIdWithProfile(@Param("id") Long id);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.userProfile WHERE u.kakaoUser.kakaoId = :kakaoId")
+    Optional<User> findByKakaoIdWithProfile(@Param("kakaoId") String kakaoId);
 
     @Query("SELECT u FROM User u JOIN FETCH u.userProfile " +
            "WHERE u.userProfile.region = :region " +
