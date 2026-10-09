@@ -51,6 +51,14 @@ public class MyPageController {
 		return ResponseEntity.ok(imagePath);
 	}
 
+	// 마이페이지 프로필 이미지 삭제 (기본 이미지로 되돌리기)
+	@DeleteMapping("/{userId}/profile-image")
+	@Operation(summary = "프로필 이미지 삭제", description = "프로필 이미지를 삭제하고 기본 이미지 상태로 되돌립니다.")
+	public ResponseEntity<Void> deleteProfileImage(@PathVariable("userId") Long userId) throws IOException {
+		myPageService.removeProfileImage(userId);
+		return ResponseEntity.ok().build();
+	}
+
 	// 회원 탈퇴
 	@DeleteMapping("/{userId}")
 	@Operation(summary = "회원 탈퇴")

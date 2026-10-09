@@ -36,6 +36,12 @@ public class MyPageService {
 		return userService.updateUserProfileImage(userId, profileImage);
 	}
 
+	// user 프로필 사진 삭제 (기본 이미지 상태로)
+	@Transactional
+	public void removeProfileImage(Long userId) throws IOException {
+		userService.updateUserProfileImage(userId, null);
+	}
+
 	// 회원 탈퇴
 	@Transactional
 	public void deleteUser(Long userId) {
